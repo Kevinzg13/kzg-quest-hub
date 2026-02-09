@@ -67,21 +67,15 @@ body {
     margin-bottom: 2rem;
 }
 
-.logo-circle {
-    width: 100px;
-    height: 100px;
-    background: linear-gradient(135deg, var(--gold), #F59E0B);
+.logo-img {
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-    font-family: 'Orbitron', monospace;
-    font-weight: 900;
-    font-size: 1.8rem;
-    color: #1a1a1a;
+    object-fit: cover;
     box-shadow: 0 0 40px rgba(251, 191, 36, 0.4);
     border: 3px solid rgba(255,255,255,0.2);
+    margin: 0 auto;
+    display: block;
 }
 
 /* Typography */
