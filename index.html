@@ -6,9 +6,8 @@
     <title>KZG Quest Hub - Coming Soon</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- WalletConnect -->
-    <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
-    <script src="https://unpkg.com/web3@1.8.0/dist/web3.min.js"></script>
+    <!-- BitcoinJS para verificación -->
+    <script src="https://unpkg.com/bitcoinjs-lib@6.1.0/dist/bitcoinjs-lib.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -36,26 +35,84 @@
             <span data-en="Launching Soon" data-es="Próximo Lanzamiento">Launching Soon</span>
         </div>
 
-        <!-- Wallet Connect Section -->
-        <div id="wallet-section">
-            <button id="connect-wallet-btn" class="wallet-btn" onclick="connectWallet()">
-                <span data-en="Connect Wallet to Join" data-es="Conectar Billetera para Unirse">
-                    Connect Wallet to Join
-                </span>
+        <!-- Wallet Connect Section - STEP 1: Enter Address -->
+        <div id="step1-address" class="wallet-section">
+            <h3 data-en="Connect Your Wallet" data-es="Conecta tu Billetera">Connect Your Wallet</h3>
+            <p class="step-desc" data-en="Enter your Bitcoin Cash address to verify ownership" 
+               data-es="Ingresa tu dirección de Bitcoin Cash para verificar propiedad">
+                Enter your Bitcoin Cash address to verify ownership
+            </p>
+            <input type="text" id="bch-address" placeholder="bitcoincash:qq..." 
+                   data-placeholder-en="bitcoincash:qq..." 
+                   data-placeholder-es="bitcoincash:qq...">
+            <button id="verify-btn" class="wallet-btn" onclick="verifyAddress()">
+                <span data-en="Verify Address" data-es="Verificar Dirección">Verify Address</span>
+            </button>
+        </div>
+
+        <!-- STEP 2: Sign Message -->
+        <div id="step2-sign" class="wallet-section hidden">
+            <h3 data-en="Sign Message" data-es="Firmar Mensaje">Sign Message</h3>
+            <p class="step-desc" data-en="Sign this message in your wallet to prove ownership" 
+               data-es="Firma este mensaje en tu billetera para probar propiedad">
+                Sign this message in your wallet to prove ownership
+            </p>
+            
+            <div class="message-box">
+                <code id="sign-message">KZG Quest Hub 2025</code>
+                <button class="copy-btn" onclick="copyMessage()" title="Copy">📋</button>
+            </div>
+            
+            <p class="wallet-instructions" data-en="How to sign:" data-es="Cómo firmar:">
+                <strong>How to sign:</strong>
+            </p>
+            <ol class="wallet-steps">
+                <li data-en="Open your BCH wallet (Paytaca, Zapit, Electron Cash...)" 
+                    data-es="Abre tu billetera BCH (Paytaca, Zapit, Electron Cash...)">
+                    Open your BCH wallet
+                </li>
+                <li data-en="Go to Sign Message or Sign Verification" 
+                    data-es="Ve a Firmar Mensaje o Verificación de Firma">
+                    Go to Sign Message
+                </li>
+                <li data-en="Paste the message above and sign" 
+                    data-es="Pega el mensaje de arriba y firma">
+                    Paste the message and sign
+                </li>
+                <li data-en="Copy the signature and paste below" 
+                    data-es="Copia la firma y pega abajo">
+                    Copy the signature and paste below
+                </li>
+            </ol>
+
+            <input type="text" id="signature" placeholder="Signature (base64)..." 
+                   data-placeholder-en="Paste signature here..." 
+                   data-placeholder-es="Pega la firma aquí...">
+            
+            <button id="connect-btn" class="wallet-btn" onclick="connectWallet()">
+                <span data-en="Connect Wallet" data-es="Conectar Billetera">Connect Wallet</span>
             </button>
             
-            <div id="wallet-info" class="hidden">
-                <div class="wallet-display">
-                    <span class="wallet-label" data-en="Connected:" data-es="Conectada:">Connected:</span>
-                    <span id="wallet-address" class="wallet-address"></span>
+            <button class="back-btn" onclick="goBack()">
+                <span data-en="← Back" data-es="← Atrás">← Back</span>
+            </button>
+        </div>
+
+        <!-- STEP 3: Connected -->
+        <div id="step3-connected" class="wallet-section hidden">
+            <div class="connected-box">
+                <span class="check-icon">✓</span>
+                <div>
+                    <span data-en="Wallet Connected!" data-es="¡Billetera Conectada!">Wallet Connected!</span>
+                    <span id="connected-address" class="connected-address"></span>
                 </div>
-                <button id="join-waitlist-btn" class="submit-btn" onclick="joinWaitlist()">
-                    <span data-en="Join Waitlist" data-es="Unirse a la Lista">Join Waitlist</span>
-                </button>
-                <button id="disconnect-btn" class="disconnect-btn" onclick="disconnectWallet()">
-                    <span data-en="Disconnect" data-es="Desconectar">Disconnect</span>
-                </button>
             </div>
+            <button id="join-btn" class="submit-btn" onclick="joinWaitlist()">
+                <span data-en="Join Waitlist" data-es="Unirse a la Lista">Join Waitlist</span>
+            </button>
+            <button class="disconnect-btn" onclick="disconnectWallet()">
+                <span data-en="Disconnect" data-es="Desconectar">Disconnect</span>
+            </button>
         </div>
 
         <p class="bonus" data-en="Early access = 2x rewards at launch" 
