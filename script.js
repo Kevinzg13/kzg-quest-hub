@@ -47,7 +47,7 @@ async function handleSubmit(e) {
     try {
         // IMPORTANT: Replace with your Google Apps Script URL after setup
         // See README.md for instructions
-        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLJmWwdDheneseipvc0OYXn3tJNx9L_xS2XcrnRynklp-moNKTjK9oHp5PZaoxeF_h7A/exec';
 
         // For now, simulate submission (remove this when connecting to Google Sheets)
         await new Promise(resolve => setTimeout(resolve, 1000));
