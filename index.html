@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KZG Quest Hub - Coming Soon</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Language Toggle -->
+        <div class="lang-toggle">
+            <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+            <button id="btn-es" onclick="setLang('es')">ES</button>
+        </div>
+
+        <!-- Logo -->
+        <div class="logo">
+            <div class="logo-circle">KZG</div>
+        </div>
+
+        <!-- Content -->
+        <h1 data-en="KZG QUEST HUB" data-es="KZG QUEST HUB">KZG QUEST HUB</h1>
+
+        <p class="tagline" data-en="Play Trivia. Earn Tokens. Daily Rewards." 
+           data-es="Juega Trivia. Gana Tokens. Recompensas Diarias.">
+            Play Trivia. Earn Tokens. Daily Rewards.
+        </p>
+
+        <div class="coming-soon">
+            <span class="rocket">🚀</span>
+            <span data-en="Launching Soon" data-es="Próximo Lanzamiento">Launching Soon</span>
+        </div>
+
+        <!-- Email Form -->
+        <form id="waitlist-form" onsubmit="handleSubmit(event)">
+            <input type="email" id="email" required 
+                   placeholder="Enter your email" 
+                   data-placeholder-en="Enter your email"
+                   data-placeholder-es="Ingresa tu email">
+            <button type="submit" data-en="Join Waitlist" data-es="Unirse a la Lista">
+                Join Waitlist
+            </button>
+        </form>
+
+        <p class="bonus" data-en="Early access = 2x rewards at launch" 
+           data-es="Acceso anticipado = 2x recompensas en el lanzamiento">
+            Early access = 2x rewards at launch
+        </p>
+
+        <!-- Social Links -->
+        <div class="social">
+            <a href="https://x.com/datwerk30" target="_blank" class="social-link">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                @datwerk30
+            </a>
+        </div>
+
+        <!-- Success Message -->
+        <div id="success-message" class="hidden">
+            <span class="check">✓</span>
+            <span data-en="You're on the list! Check your email." 
+                  data-es="¡Estás en la lista! Revisa tu email.">
+                You're on the list! Check your email.
+            </span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
