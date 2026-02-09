@@ -6,6 +6,9 @@
     <title>KZG Quest Hub - Coming Soon</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- WalletConnect -->
+    <script src="https://unpkg.com/@walletconnect/web3-provider@1.8.0/dist/umd/index.min.js"></script>
+    <script src="https://unpkg.com/web3@1.8.0/dist/web3.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -22,7 +25,7 @@
 
         <!-- Content -->
         <h1 data-en="KZG QUEST HUB" data-es="KZG QUEST HUB">KZG QUEST HUB</h1>
-
+        
         <p class="tagline" data-en="Play Trivia. Earn Tokens. Daily Rewards." 
            data-es="Juega Trivia. Gana Tokens. Recompensas Diarias.">
             Play Trivia. Earn Tokens. Daily Rewards.
@@ -33,16 +36,27 @@
             <span data-en="Launching Soon" data-es="Próximo Lanzamiento">Launching Soon</span>
         </div>
 
-        <!-- Email Form -->
-        <form id="waitlist-form" onsubmit="handleSubmit(event)">
-            <input type="email" id="email" required 
-                   placeholder="Enter your email" 
-                   data-placeholder-en="Enter your email"
-                   data-placeholder-es="Ingresa tu email">
-            <button type="submit" data-en="Join Waitlist" data-es="Unirse a la Lista">
-                Join Waitlist
+        <!-- Wallet Connect Section -->
+        <div id="wallet-section">
+            <button id="connect-wallet-btn" class="wallet-btn" onclick="connectWallet()">
+                <span data-en="Connect Wallet to Join" data-es="Conectar Billetera para Unirse">
+                    Connect Wallet to Join
+                </span>
             </button>
-        </form>
+            
+            <div id="wallet-info" class="hidden">
+                <div class="wallet-display">
+                    <span class="wallet-label" data-en="Connected:" data-es="Conectada:">Connected:</span>
+                    <span id="wallet-address" class="wallet-address"></span>
+                </div>
+                <button id="join-waitlist-btn" class="submit-btn" onclick="joinWaitlist()">
+                    <span data-en="Join Waitlist" data-es="Unirse a la Lista">Join Waitlist</span>
+                </button>
+                <button id="disconnect-btn" class="disconnect-btn" onclick="disconnectWallet()">
+                    <span data-en="Disconnect" data-es="Desconectar">Disconnect</span>
+                </button>
+            </div>
+        </div>
 
         <p class="bonus" data-en="Early access = 2x rewards at launch" 
            data-es="Acceso anticipado = 2x recompensas en el lanzamiento">
@@ -62,10 +76,13 @@
         <!-- Success Message -->
         <div id="success-message" class="hidden">
             <span class="check">✓</span>
-            <span data-en="You're on the list! Check your email." 
-                  data-es="¡Estás en la lista! Revisa tu email.">
-                You're on the list! Check your email.
-            </span>
+            <div class="success-content">
+                <span data-en="You're on the list!" data-es="¡Estás en la lista!">You're on the list!</span>
+                <span id="success-wallet" class="success-wallet"></span>
+                <span data-en="We'll notify you at launch." data-es="Te notificaremos en el lanzamiento.">
+                    We'll notify you at launch.
+                </span>
+            </div>
         </div>
     </div>
 
