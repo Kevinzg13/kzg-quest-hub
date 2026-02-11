@@ -36,61 +36,97 @@
         <!-- STEP 1: Connect Button -->
         <div id="step1-connect" class="wallet-section">
             <h3 data-en="Connect Your Wallet" data-es="Conecta tu Billetera">Connect Your Wallet</h3>
-            <p class="step-desc" data-en="Scan QR with your wallet or click to connect" 
-               data-es="Escanea el QR con tu billetera o haz clic para conectar">
-                Scan QR with your wallet or click to connect
+            <p class="step-desc" data-en="Choose your preferred BCH wallet" 
+               data-es="Elige tu billetera BCH preferida">
+                Choose your preferred BCH wallet
             </p>
 
             <button id="connect-btn" class="wallet-btn" onclick="openWalletModal()">
                 <span data-en="🔗 Connect Wallet" data-es="🔗 Conectar Billetera">🔗 Connect Wallet</span>
             </button>
-
-            <div class="supported-wallets">
-                <span data-en="Supports:" data-es="Soporta:">Supports:</span>
-                <span class="wallet-tag">Cashonize</span>
-                <span class="wallet-tag">Zapit</span>
-                <span class="wallet-tag">Paytaca</span>
-                <span class="wallet-tag">+100 wallets</span>
-            </div>
         </div>
 
-        <!-- STEP 2: QR Modal -->
-        <div id="qr-modal" class="modal hidden">
+        <!-- STEP 2: Wallet Selection Modal -->
+        <div id="wallet-modal" class="modal hidden">
             <div class="modal-content">
                 <button class="close-btn" onclick="closeModal()">&times;</button>
-                <h3 data-en="Scan with your wallet" data-es="Escanea con tu billetera">Scan with your wallet</h3>
+                <h3 data-en="Select your wallet" data-es="Selecciona tu billetera">Select your wallet</h3>
 
-                <div id="qr-container">
-                    <div id="qr-code"></div>
-                    <p class="qr-loading" data-en="Generating QR..." data-es="Generando QR...">Generating QR...</p>
+                <div class="wallet-options">
+                    <a href="paytaca://" class="wallet-option" onclick="handleWalletOpen('Paytaca')">
+                        <div class="wallet-icon">💜</div>
+                        <div class="wallet-info">
+                            <strong>Paytaca</strong>
+                            <span data-en="Mobile & Desktop" data-es="Móvil y Escritorio">Mobile & Desktop</span>
+                        </div>
+                    </a>
+
+                    <a href="zapit://" class="wallet-option" onclick="handleWalletOpen('Zapit')">
+                        <div class="wallet-icon">⚡</div>
+                        <div class="wallet-info">
+                            <strong>Zapit</strong>
+                            <span data-en="Mobile wallet" data-es="Billetera móvil">Mobile wallet</span>
+                        </div>
+                    </a>
+
+                    <a href="https://cashonize.com" target="_blank" class="wallet-option" onclick="handleWalletOpen('Cashonize')">
+                        <div class="wallet-icon">🌐</div>
+                        <div class="wallet-info">
+                            <strong>Cashonize</strong>
+                            <span data-en="Web wallet" data-es="Billetera web">Web wallet</span>
+                        </div>
+                    </a>
                 </div>
 
-                <div class="modal-divider">
-                    <span data-en="or" data-es="o">or</span>
-                </div>
-
-                <button id="copy-uri-btn" class="secondary-btn" onclick="copyConnectionURI()">
-                    <span data-en="📋 Copy Connection Link" data-es="📋 Copiar Link de Conexión">📋 Copy Connection Link</span>
-                </button>
-
-                <div class="wallet-links">
-                    <p data-en="Open directly in:" data-es="Abrir directamente en:">Open directly in:</p>
-                    <div class="wallet-buttons">
-                        <a href="#" id="paytaca-link" class="wallet-link-btn" target="_blank">
-                            Paytaca
-                        </a>
-                        <a href="#" id="zapit-link" class="wallet-link-btn" target="_blank">
-                            Zapit
-                        </a>
-                        <a href="#" id="cashonize-link" class="wallet-link-btn" target="_blank">
-                            Cashonize
-                        </a>
-                    </div>
+                <div class="manual-option">
+                    <p data-en="Or connect manually:" data-es="O conecta manualmente:">Or connect manually:</p>
+                    <input type="text" id="manual-address" placeholder="bitcoincash:qq..." 
+                           data-placeholder-en="Paste your BCH address" 
+                           data-placeholder-es="Pega tu dirección BCH">
+                    <button class="secondary-btn" onclick="connectManual()">
+                        <span data-en="Connect Address" data-es="Conectar Dirección">Connect Address</span>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- STEP 3: Connected -->
+        <!-- STEP 3: Verify Ownership (after wallet opens) -->
+        <div id="step2-verify" class="wallet-section hidden">
+            <h3 data-en="Verify Ownership" data-es="Verificar Propiedad">Verify Ownership</h3>
+            <p class="step-desc" data-en="Sign a message in your wallet to prove you own this address" 
+               data-es="Firma un mensaje en tu billetera para probar que eres dueño de esta dirección">
+                Sign a message in your wallet to prove you own this address
+            </p>
+
+            <div class="message-box">
+                <code id="sign-message">KZG Quest Hub 2025</code>
+                <button class="copy-btn" onclick="copyMessage()" title="Copy">📋</button>
+            </div>
+
+            <div class="verify-instructions">
+                <p data-en="How to sign:" data-es="Cómo firmar:"><strong data-en="How to sign:" data-es="Cómo firmar:">How to sign:</strong></p>
+                <ol>
+                    <li data-en="Open your wallet app" data-es="Abre tu app de billetera">Open your wallet app</li>
+                    <li data-en="Go to Sign Message or Verify" data-es="Ve a Firmar Mensaje o Verificar">Go to Sign Message or Verify</li>
+                    <li data-en="Paste the message above" data-es="Pega el mensaje de arriba">Paste the message above</li>
+                    <li data-en="Copy the signature and paste below" data-es="Copia la firma y pega abajo">Copy the signature and paste below</li>
+                </ol>
+            </div>
+
+            <input type="text" id="signature" placeholder="Signature..." 
+                   data-placeholder-en="Paste signature here..." 
+                   data-placeholder-es="Pega la firma aquí...">
+
+            <button id="verify-btn" class="wallet-btn" onclick="verifySignature()">
+                <span data-en="Verify & Connect" data-es="Verificar y Conectar">Verify & Connect</span>
+            </button>
+
+            <button class="back-btn" onclick="goBackToWallets()">
+                <span data-en="← Back" data-es="← Atrás">← Back</span>
+            </button>
+        </div>
+
+        <!-- STEP 4: Connected -->
         <div id="step3-connected" class="wallet-section hidden">
             <div class="connected-box">
                 <span class="check-icon">✓</span>
@@ -135,10 +171,6 @@
         </div>
     </div>
 
-    <!-- QRCode.js library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <!-- WalletConnect v2 -->
-    <script src="https://unpkg.com/@walletconnect/ethereum-provider@2.10.0/dist/index.umd.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

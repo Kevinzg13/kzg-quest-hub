@@ -150,7 +150,6 @@ h1 {
     font-family: 'Inter', sans-serif;
     cursor: pointer;
     transition: all 0.3s;
-    margin-bottom: 1rem;
 }
 
 .wallet-btn:hover {
@@ -207,7 +206,6 @@ h1 {
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s;
-    margin-bottom: 1rem;
 }
 
 .secondary-btn:hover {
@@ -215,22 +213,22 @@ h1 {
     background: rgba(139, 92, 246, 0.1);
 }
 
-.supported-wallets {
-    text-align: center;
-    font-size: 0.85rem;
+.back-btn {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: transparent;
     color: var(--text-muted);
-    margin-top: 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 0.5rem;
 }
 
-.wallet-tag {
-    display: inline-block;
-    background: rgba(139, 92, 246, 0.2);
-    color: var(--primary);
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    margin: 0.25rem;
-    font-size: 0.8rem;
-    font-weight: 600;
+.back-btn:hover {
+    color: var(--text);
+    border-color: var(--text);
 }
 
 .modal {
@@ -280,75 +278,149 @@ h1 {
     margin-bottom: 1.5rem;
 }
 
-#qr-container {
-    background: white;
+.wallet-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.wallet-option {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.3);
     padding: 1rem;
     border-radius: 12px;
-    margin-bottom: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 200px;
+    text-decoration: none;
+    color: var(--text);
+    transition: all 0.3s;
 }
 
-#qr-code {
-    display: flex;
-    justify-content: center;
+.wallet-option:hover {
+    background: rgba(139, 92, 246, 0.2);
+    border-color: var(--primary);
+    transform: translateY(-2px);
 }
 
-.qr-loading {
+.wallet-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.wallet-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.wallet-info strong {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.wallet-info span {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.manual-option {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 1.5rem;
+}
+
+.manual-option p {
     color: var(--text-muted);
     font-size: 0.9rem;
+    margin-bottom: 0.75rem;
 }
 
-.modal-divider {
-    display: flex;
-    align-items: center;
-    margin: 1rem 0;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
-
-.modal-divider::before,
-.modal-divider::after {
-    content: "";
-    flex: 1;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    margin: 0 0.5rem;
-}
-
-.wallet-links {
-    margin-top: 1rem;
-}
-
-.wallet-links p {
-    color: var(--text-muted);
-    font-size: 0.85rem;
+.manual-option input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.3);
+    color: var(--text);
+    font-size: 0.9rem;
     margin-bottom: 0.5rem;
 }
 
-.wallet-buttons {
+.message-box {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.wallet-link-btn {
-    background: rgba(139, 92, 246, 0.2);
-    color: var(--primary);
-    padding: 0.5rem 1rem;
+    background: rgba(0,0,0,0.5);
+    padding: 1rem;
     border-radius: 8px;
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 600;
-    transition: all 0.3s;
-    border: 1px solid rgba(139, 92, 246, 0.3);
+    margin-bottom: 1rem;
+    border: 1px dashed var(--gold);
 }
 
-.wallet-link-btn:hover {
+.message-box code {
+    font-family: 'Courier New', monospace;
+    color: var(--gold);
+    font-size: 1.1rem;
+    flex: 1;
+    word-break: break-all;
+}
+
+.copy-btn {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--text);
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+}
+
+.copy-btn:hover {
     background: var(--primary);
-    color: white;
+    border-color: var(--primary);
+}
+
+.verify-instructions {
+    background: rgba(0,0,0,0.3);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.verify-instructions p {
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+
+.verify-instructions ol {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-left: 1.2rem;
+}
+
+.verify-instructions li {
+    margin-bottom: 0.3rem;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.3);
+    color: var(--text);
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 1rem;
+    transition: all 0.3s;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
 }
 
 .connected-box {
