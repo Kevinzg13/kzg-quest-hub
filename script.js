@@ -1,180 +1,170 @@
 let currentLang = 'en';
 let userWallet = null;
-let selectedWallet = null;
+let userBalance = { bch: 0, usd: 0, kzg: 0 };
 
-function setLang(lang) {
-    currentLang = lang;
-    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-    document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+function toggleLang() {
+    currentLang = currentLang === 'en' ? 'es' : 'en';
+    document.getElementById('lang-toggle').textContent = currentLang === 'en' ? 'EN/ES' : 'ES/EN';
+
     document.querySelectorAll('[data-en]').forEach(el => {
-        if (el.hasAttribute('placeholder') && el.getAttribute(`data-placeholder-${lang}`)) {
-            el.placeholder = el.getAttribute(`data-placeholder-${lang}`);
-        } else {
-            el.textContent = el.getAttribute(`data-${lang}`);
-        }
+        el.textContent = el.getAttribute(`data-${currentLang}`);
     });
 }
 
-function openWalletModal() {
-    document.getElementById('wallet-modal').classList.remove('hidden');
+function openSidePanel() {
+    document.getElementById('side-panel').classList.add('open');
+    document.getElementById('overlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
-    document.getElementById('wallet-modal').classList.add('hidden');
+function closeSidePanel() {
+    document.getElementById('side-panel').classList.remove('open');
+    document.getElementById('overlay').classList.remove('show');
+    document.body.style.overflow = '';
 }
 
-function handleWalletOpen(walletName) {
-    selectedWallet = walletName;
-    // Give time for app to open
+function connectWallet(walletType) {
     setTimeout(() => {
-        closeModal();
-        showVerifyStep();
-    }, 500);
+        const mockAddress = 'bitcoincash:qr' + Math.random().toString(36).substring(2, 15);
+        userWallet = {
+            address: mockAddress,
+            type: walletType,
+            shortAddress: mockAddress.substring(0, 8) + '...' + mockAddress.substring(mockAddress.length - 4)
+        };
+
+        userBalance = {
+            bch: (Math.random() * 5).toFixed(4),
+            usd: (Math.random() * 2000).toFixed(2),
+            kzg: (Math.random() * 10000).toFixed(2)
+        };
+
+        showConnectedState();
+        updateNavbar();
+    }, 1000);
 }
 
-function showVerifyStep() {
-    document.getElementById('step1-connect').classList.add('hidden');
-    document.getElementById('step2-verify').classList.remove('hidden');
-}
+function showConnectedState() {
+    document.getElementById('panel-disconnected').classList.add('hidden');
+    document.getElementById('panel-connected').classList.remove('hidden');
 
-function goBackToWallets() {
-    document.getElementById('step2-verify').classList.add('hidden');
-    document.getElementById('step1-connect').classList.remove('hidden');
-    selectedWallet = null;
-}
+    const walletNames = {
+        'paytaca': 'Paytaca',
+        'zapit': 'Zapit',
+        'cashonize': 'Cashonize',
+        'mainnet': 'Browser Wallet'
+    };
+    document.getElementById('wallet-name').textContent = walletNames[userWallet.type] || 'Wallet';
 
-function connectManual() {
-    const addressInput = document.getElementById('manual-address');
-    const address = addressInput.value.trim();
+    document.getElementById('balance-usd').textContent = '$' + parseFloat(userBalance.usd).toLocaleString();
+    document.getElementById('balance-bch').textContent = userBalance.bch + ' BCH';
 
-    // Validate BCH address
-    const bchRegex = /^(bitcoincash:)?[qQpP][a-zA-Z0-9]{41}$/;
+    document.getElementById('bch-amount').textContent = userBalance.bch;
+    document.getElementById('bch-value').textContent = '$' + (userBalance.bch * 400).toFixed(2);
 
-    if (!bchRegex.test(address)) {
-        alert(currentLang === 'es' 
-            ? 'Dirección BCH inválida. Debe empezar con bitcoincash:qq...' 
-            : 'Invalid BCH address. Must start with bitcoincash:qq...');
-        return;
-    }
+    document.getElementById('kzg-amount').textContent = userBalance.kzg;
+    document.getElementById('kzg-value').textContent = '$' + (userBalance.kzg * 0.05).toFixed(2);
 
-    userWallet = address.startsWith('bitcoincash:') ? address : 'bitcoincash:' + address;
-    closeModal();
-    showVerifyStep();
-}
-
-function copyMessage() {
-    const message = document.getElementById('sign-message').textContent;
-    navigator.clipboard.writeText(message).then(() => {
-        const btn = document.querySelector('.copy-btn');
-        btn.textContent = '✓';
-        setTimeout(() => btn.textContent = '📋', 2000);
-    });
-}
-
-function verifySignature() {
-    const sigInput = document.getElementById('signature');
-    const signature = sigInput.value.trim();
-    const btn = document.getElementById('verify-btn');
-
-    if (!signature || signature.length < 10) {
-        alert(currentLang === 'es' 
-            ? 'Por favor pega una firma válida' 
-            : 'Please paste a valid signature');
-        return;
-    }
-
-    btn.classList.add('loading');
-    btn.disabled = true;
-
-    // Simulate verification
-    setTimeout(() => {
-        // In production: verify signature cryptographically
-        // For now, accept any non-empty signature
-
-        document.getElementById('step2-verify').classList.add('hidden');
-        document.getElementById('step3-connected').classList.remove('hidden');
-
-        const shortAddress = userWallet.substring(0, 10) + '...' + userWallet.substring(userWallet.length - 4);
-        document.getElementById('connected-address').textContent = shortAddress;
-        document.getElementById('connected-address').title = userWallet;
-
-        localStorage.setItem('kzg_wallet_connected', 'true');
-        localStorage.setItem('kzg_wallet_address', userWallet);
-        localStorage.setItem('kzg_signature', signature);
-
-        btn.classList.remove('loading');
-        btn.disabled = false;
-    }, 1500);
+    localStorage.setItem('kzg_wallet', JSON.stringify(userWallet));
+    localStorage.setItem('kzg_balance', JSON.stringify(userBalance));
 }
 
 function disconnectWallet() {
     userWallet = null;
-    selectedWallet = null;
+    userBalance = { bch: 0, usd: 0, kzg: 0 };
 
-    localStorage.removeItem('kzg_wallet_connected');
-    localStorage.removeItem('kzg_wallet_address');
-    localStorage.removeItem('kzg_signature');
-    localStorage.removeItem('kzg_waitlist_joined');
+    document.getElementById('panel-connected').classList.add('hidden');
+    document.getElementById('panel-disconnected').classList.remove('hidden');
 
-    document.getElementById('step3-connected').classList.add('hidden');
-    document.getElementById('step1-connect').classList.remove('hidden');
-    document.getElementById('manual-address').value = '';
-    document.getElementById('signature').value = '';
+    localStorage.removeItem('kzg_wallet');
+    localStorage.removeItem('kzg_balance');
+    localStorage.removeItem('kzg_joined');
+
+    updateNavbar();
 }
 
-async function joinWaitlist() {
+function updateNavbar() {
+    const btn = document.getElementById('connect-btn-nav');
+    if (userWallet) {
+        btn.textContent = userWallet.shortAddress;
+        btn.style.background = 'var(--bg-card)';
+        btn.style.border = '1px solid var(--border-color)';
+        btn.style.color = 'var(--text-primary)';
+    } else {
+        btn.textContent = currentLang === 'es' ? 'Conectar' : 'Connect';
+        btn.style.background = '';
+        btn.style.border = '';
+        btn.style.color = '';
+    }
+}
+
+function switchTab(tabName) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+    document.getElementById('tab-' + tabName).classList.remove('hidden');
+}
+
+function joinWaitlist() {
     if (!userWallet) return;
 
-    const btn = document.getElementById('join-btn');
-    btn.classList.add('loading');
+    const btn = document.getElementById('join-waitlist-btn');
+    btn.innerHTML = '<span>✓ ' + (currentLang === 'es' ? 'Uniendo...' : 'Joining...') + '</span>';
     btn.disabled = true;
 
-    try {
-        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+    setTimeout(() => {
+        document.getElementById('panel-connected').classList.add('hidden');
+        document.getElementById('panel-success').classList.remove('hidden');
 
-        // Simulate
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        localStorage.setItem('kzg_joined', 'true');
 
-        document.getElementById('step3-connected').style.display = 'none';
-        document.getElementById('success-message').classList.remove('hidden');
+        const mainCta = document.getElementById('main-cta');
+        mainCta.innerHTML = '<span>✓ ' + (currentLang === 'es' ? '¡Ya estás en la lista!' : "You're on the list!") + '</span>';
+        mainCta.disabled = true;
+        mainCta.style.background = 'var(--success)';
+    }, 1500);
+}
 
-        const shortAddress = userWallet.substring(0, 10) + '...' + userWallet.substring(userWallet.length - 4);
-        document.getElementById('success-wallet').textContent = shortAddress;
-
-        localStorage.setItem('kzg_waitlist_joined', 'true');
-
-    } catch (error) {
-        alert(currentLang === 'es' ? 'Error al unirse' : 'Error joining');
-        btn.classList.remove('loading');
-        btn.disabled = false;
+function createParticles() {
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: absolute;
+            width: ${Math.random() * 4 + 1}px;
+            height: ${Math.random() * 4 + 1}px;
+            background: rgba(139, 92, 246, ${Math.random() * 0.5});
+            border-radius: 50%;
+            left: ${Math.random() * 100}%;
+            top: ${Math.random() * 100}%;
+            animation: float ${Math.random() * 10 + 10}s infinite ease-in-out;
+            animation-delay: ${Math.random() * 5}s;
+        `;
+        container.appendChild(particle);
     }
 }
 
-// On page load
 document.addEventListener('DOMContentLoaded', () => {
-    const savedWallet = localStorage.getItem('kzg_wallet_address');
-    const savedJoined = localStorage.getItem('kzg_waitlist_joined');
+    createParticles();
 
-    if (savedJoined && savedWallet) {
-        document.getElementById('step1-connect').classList.add('hidden');
-        document.getElementById('success-message').classList.remove('hidden');
-        document.getElementById('success-wallet').textContent = savedWallet.substring(0, 10) + '...' + savedWallet.substring(savedWallet.length - 4);
-    } else if (savedWallet) {
-        userWallet = savedWallet;
-        document.getElementById('step1-connect').classList.add('hidden');
-        document.getElementById('step3-connected').classList.remove('hidden');
-        document.getElementById('connected-address').textContent = savedWallet.substring(0, 10) + '...' + savedWallet.substring(savedWallet.length - 4);
-    }
+    const savedWallet = localStorage.getItem('kzg_wallet');
+    const savedBalance = localStorage.getItem('kzg_balance');
+    const savedJoined = localStorage.getItem('kzg_joined');
 
-    const browserLang = navigator.language || navigator.userLanguage;
-    if (browserLang.startsWith('es')) {
-        setLang('es');
-    }
+    if (savedWallet) {
+        userWallet = JSON.parse(savedWallet);
+        userBalance = JSON.parse(savedBalance);
+        updateNavbar();
 
-    // Close modal on outside click
-    document.getElementById('wallet-modal').addEventListener('click', (e) => {
-        if (e.target.id === 'wallet-modal') {
-            closeModal();
+        if (savedJoined) {
+            const mainCta = document.getElementById('main-cta');
+            mainCta.innerHTML = '<span>✓ ' + (currentLang === 'es' ? '¡Ya estás en la lista!' : "You're on the list!") + '</span>';
+            mainCta.disabled = true;
+            mainCta.style.background = 'var(--success)';
         }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeSidePanel();
     });
 });
