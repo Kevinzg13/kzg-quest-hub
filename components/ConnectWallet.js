@@ -4,7 +4,8 @@ import { useWallet } from '../context/WalletContext';
 const ConnectWallet = () => {
   const { walletAddress, connectWallet, disconnectWallet, loading, isConnected } = useWallet();
 
-  const shortenAddress = (addr) => {
+  // Formato de dirección BCH (ej: bitcoincash:q...)
+  const formatAddress = (addr) => {
     if (!addr) return '';
     const cleanAddr = addr.replace('bitcoincash:', '');
     return `${cleanAddr.slice(0, 6)}...${cleanAddr.slice(-4)}`;
@@ -13,8 +14,10 @@ const ConnectWallet = () => {
   if (isConnected) {
     return (
       <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/30 px-4 py-2 rounded-full">
-        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse-slow" />
-        <span className="text-green-400 font-mono text-sm">{shortenAddress(walletAddress)}</span>
+        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+        <span className="text-green-400 font-mono text-sm">
+          {formatAddress(walletAddress)}
+        </span>
         <button
           onClick={disconnectWallet}
           className="ml-2 text-xs bg-red-500/20 hover:bg-red-500/30 px-2 py-1 rounded transition text-red-300"
