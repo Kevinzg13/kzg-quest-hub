@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import WalletConnect from '@walletconnect/client';
 import QRCodeModal from '@walletconnect/qrcode-modal';
-import bchaddr from 'bchaddrjs-bitbox';
+import * as bchaddr from 'bchaddrjs';
 
 const WalletContext = createContext();
 
