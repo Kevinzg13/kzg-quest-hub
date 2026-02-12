@@ -14,7 +14,7 @@
     "react-dom": "^18.3.1",
     "@walletconnect/client": "^1.8.0",
     "@walletconnect/qrcode-modal": "^1.8.0",
-    "bchaddrjs-bitbox": "^2.0.1",
+    "bchaddrjs": "^0.1.5",
     "axios": "^1.6.8"
   },
   "devDependencies": {
