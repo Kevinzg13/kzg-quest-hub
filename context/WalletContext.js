@@ -16,6 +16,7 @@ export const WalletProvider = ({ children }) => {
     if (typeof window === 'undefined') return;
 
     const initConnector = () => {
+      // Configuración específica para BCH (chainId 145)
       const wc = new WalletConnect({
         bridge: 'https://bridge.walletconnect.org',
         qrcodeModal: QRCodeModal,
@@ -29,13 +30,15 @@ export const WalletProvider = ({ children }) => {
 
       setConnector(wc);
 
+      // Restaurar sesión existente
       if (wc.connected) {
         handleSessionUpdate(wc.session);
       }
 
+      // Eventos críticos
       wc.on('connect', (error, payload) => {
         if (error) {
-          console.error('Connection error:', error);
+          console.error('Error de conexión:', error);
           setLoading(false);
           return;
         }
@@ -45,7 +48,7 @@ export const WalletProvider = ({ children }) => {
 
       wc.on('session_update', (error, payload) => {
         if (error) {
-          console.error('Session update error:', error);
+          console.error('Error en actualización:', error);
           return;
         }
         handleSessionUpdate(payload.params[0]);
@@ -60,29 +63,33 @@ export const WalletProvider = ({ children }) => {
     initConnector();
   }, []);
 
+  // Conversión a formato CashAddr (BCH)
   const handleSessionUpdate = (session) => {
     if (session.accounts && session.accounts.length > 0) {
       const legacyAddr = session.accounts[0].split(':')[1] || session.accounts[0];
       try {
+        // Conversión a formato CashAddr (ej: bitcoincash:q...)
         const cashAddr = bchaddr.toCashAddress(legacyAddr);
         setWalletAddress(cashAddr);
       } catch (error) {
-        console.error('Error converting address:', error);
+        console.error('Error en conversión de dirección:', error);
         setWalletAddress(legacyAddr);
       }
     }
   };
 
+  // Conexión con chainId 145 (BCH Mainnet)
   const connectWallet = async () => {
     if (!connector) return;
-    
     setLoading(true);
     try {
       if (!connector.connected) {
-        await connector.createSession({ chainId: 145 });
+        await connector.createSession({ 
+          chainId: 145 // ✅ CRUCIAL: 145 = BCH Mainnet
+        });
       }
     } catch (error) {
-      console.error('Error connecting:', error);
+      console.error('Error al conectar:', error);
       setLoading(false);
     }
   };
