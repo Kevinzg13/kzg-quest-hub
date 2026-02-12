@@ -45,3 +45,21 @@ body {
 #wc-qrcode-modal .walletconnect-qrcode__subheading {
   color: #64748b !important;
 }
+/* Estilos para WalletConnect QR Modal */
+#wc-qrcode-modal {
+  z-index: 99999 !important;
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+#wc-qrcode-modal .walletconnect-qrcode__image {
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3) !important;
+}
+#wc-qrcode-modal .walletconnect-qrcode__heading {
+  font-family: 'Inter', sans-serif !important;
+  color: #8B5CF6 !important;
+  font-weight: 700 !important;
+}
+#wc-qrcode-modal .walletconnect-qrcode__subheading {
+  color: #64748b !important;
+  font-size: 14px !important;
+}
